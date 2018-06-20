@@ -10,6 +10,6 @@ app.set('views', path.join(__dirname, '../client'));
 app.use(express.static(path.join(__dirname, '../client')));
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: false}));
-mongoose.connect('mongodb://BojidarMessiah:G1111100@ds263640.mlab.com:63640/bojidar_expenses');
+mongoose.connect('mongodb://BojidarMessiah:courseNodeReact2018@ds161740.mlab.com:61740/bulls_and_cows');
 app.use('/', router);
 module.exports=app;
