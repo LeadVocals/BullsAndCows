@@ -9,6 +9,7 @@ import WoodenButton from './buttons/woodenButton';
 import $ from 'jquery';
 import GameTypes from './GameTypes';
 import Users from './Users';
+import Tournaments from './Tournaments';
 
 var querystring = require('querystring');
 class Settings extends React.Component {
@@ -40,6 +41,12 @@ constructor() {
 	     if(e.target.id == 'users_button'){
 	     	this.changePage('users');
 	     }
+	     if(e.target.id == 'users_button'){
+	     	this.changePage('users');
+	     }
+	     if(e.target.id == 'tournaments_button'){
+	     	this.changePage('tournaments');
+	     }
 	    }
     changePage(page){
     	$("#settings_div").css('display','none');
@@ -50,13 +57,17 @@ render() {
       return (
         <div>	      
 		     <Thumbnail id="settings_div" style={this.state.style}>
+		     <center>
+		     	<br />
 		     	<WoodenButton id="home_button" style="width:25% !important" onClick={this.onClick} value="HOME"></WoodenButton> <br />
 		   		<WoodenButton id="users_button" style="width:25% !important" onClick={this.onClick} value="USERS"></WoodenButton> <br />
 		   		<WoodenButton id="game_types_button" style="width:25% !important" onClick={this.onClick} value="GAME TYPES"></WoodenButton> <br />
-		   		<WoodenButton value="TOURNAMENTS"></WoodenButton>
+		   		<WoodenButton id="tournaments_button" style="width:25% !important" onClick={this.onClick} value="TOURNAMENTS"></WoodenButton> <br />
+		   	</center>
 		   	</Thumbnail>
 		   	<GameTypes />
 		   	<Users />
+		   	<Tournaments />
    		</div>
       )
    }

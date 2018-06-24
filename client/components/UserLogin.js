@@ -49,10 +49,17 @@ constructor() {
 	          }
 	        }).then(function(response) {
 	        	if(typeof(response.data[0])!='undefined' && response.data[0]!=null){
-	        		e.setState({
-				    	messageFromServer: 'SUCESSFUL LOGIN FOR USER ID: ' + response.data[0]._id
-				    });
-				    window.localStorage.setItem("user_id",response.data[0]._id);
+	        		if(typeof(response.data[0]._id)!='undefined' && response.data[0]._id!=null){
+		        		e.setState({
+					    	messageFromServer: 'SUCESSFUL LOGIN FOR USER ID: ' + response.data[0]._id
+					    });
+					    window.localStorage.setItem("username",response.data[0].username);
+					    window.localStorage.setItem("user_role",response.data[0].role);
+		        	}else{
+		        		e.setState({
+					    	messageFromServer: "USER NOT EXISTS!"
+					    });
+		        	}
 	        	}else{
 	        		e.setState({
 				    	messageFromServer: "USER NOT EXISTS!"

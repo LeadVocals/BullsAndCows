@@ -1,4 +1,4 @@
-//client/components/Settings.js
+//client/components/Games.js
 import React from 'react';
 import {Button} from 'react-bootstrap';
 import Modal from 'react-modal';
@@ -6,6 +6,7 @@ import axios from 'axios';
 import {Link} from 'react-router-dom';
 import { Thumbnail } from 'react-bootstrap';
 import WoodenButton from './buttons/woodenButton';
+import SmallWoodenButton from './buttons/woodenButton';
 import $ from 'jquery';
 
 var querystring = require('querystring');
@@ -13,6 +14,7 @@ class Games extends React.Component {
 constructor() {
       super();
       let backgroundImage = '../../images/inside_bg.jpg';
+      let backgroundButtonImage = '../../images/button.png';
       this.onClick = this.onClick.bind(this);
 	  this.state={
 		  		style:{
@@ -56,8 +58,9 @@ render() {
       return (
         <div>	      
 		     <Thumbnail id="games_div" style={this.state.style}>
-		     	<WoodenButton id="home_button" style="width:25% !important" onClick={this.onClick} value="HOME">
-		     	</WoodenButton>
+		     <center>
+		     	
+		     	
 		     	<br />
 		     			<table>
 			          <thead>
@@ -78,21 +81,24 @@ render() {
 				                <td className='button-col'>{gt.diggits}</td>
 				                <td className='button-col'>{gt.total_time} seconds</td>
 				                <td className='button-col'>
-					                <WoodenButton id="" onClick={() => {
+					                <button id="" onClick={() => {
 					                	window.localStorage.setItem('gt',gt._id);
 					                	window.localStorage.setItem('diggits',gt.diggits);
 					                	window.localStorage.setItem('total_time',gt.total_time);
 					                	window.location.reload();
 					                	}
 					                	} 
-					                	style="width:25% !important" value="PLAY">
-			     					</WoodenButton>
+					                	>PLAY
+			     					</button>
 				                </td>
 			                </tr>
 			              })
 			            }
 			            </tbody>
 				</table>
+				<br />
+				<WoodenButton id="home_button" style="width:25% !important" onClick={this.onClick} value="HOME"></WoodenButton>
+				</center>
 		   	</Thumbnail>		   	
    		</div>
       )

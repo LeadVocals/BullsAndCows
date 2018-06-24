@@ -9,7 +9,7 @@ import WoodenButton from './buttons/woodenButton';
 import $ from 'jquery';
 
 var querystring = require('querystring');
-class Highscore extends React.Component {
+class TournamentInfo extends React.Component {
 constructor() {
       super();
       let backgroundImage = '../../images/inside_bg.jpg';
@@ -31,12 +31,13 @@ constructor() {
 	  
     }
     onClick(e) {
- 		if (e.target.id == "home_button") {
-	        this.changePage('home');
+ 		if (e.target.id == "play_tournaments_button") {
+	        this.changePage('play_tournaments');
 	      }
 	    }
     changePage(page){
-    	$("#highscore_div").css('display','none');
+    	$("#tournament_info_div").css('display','none');
+    	window.localStorage.setItem('tour_id',0);
     	$("#"+page+"_div").css('display','block');
     }
     componentDidMount() {
@@ -47,7 +48,7 @@ constructor() {
 	  }
     
     getData(ev){
-	    axios.get('/getHighscore')
+	    axios.get('/getTournamentScores?tour_id='+window.localStorage.getItem('tour_id'))
 	      .then(function(response) {
 	        ev.setState({data: response.data});
 	      });
@@ -56,7 +57,7 @@ constructor() {
 render() {
       return (
         <div>	      
-		     <Thumbnail id="highscore_div" style={this.state.style}>
+		     <Thumbnail id="tournament_info_div" style={this.state.style}>
 		     	<center>
 		     	<table>
 			          <thead>
@@ -82,13 +83,12 @@ render() {
 			            }
 			            </tbody>
 				</table>
-				<br />
 		     	
-		     	<WoodenButton id="home_button" style="width:25% !important" onClick={this.onClick} value="HOME"></WoodenButton>
+		     	<WoodenButton id="play_tournaments_button" style="width:25% !important" onClick={this.onClick} value="BACK"></WoodenButton>
 		     	</center>
 		   	</Thumbnail>
    		</div>
       )
    }
 }
-export default Highscore;
+export default TournamentInfo;

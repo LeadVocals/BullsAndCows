@@ -3,7 +3,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-class WoodenButton extends React.Component {
+class SmallWoodenButton extends React.Component {
 constructor(){
   super();
   let backgroundImage = '../../images/button.png';
@@ -12,13 +12,14 @@ constructor(){
 	  			'fontSize': '16px',
 	  			'backgroundImage': 'url('+backgroundImage+')',
 	  			'border': 'none',
-	  			'backgroundSize':'cover',
+	  			'backgroundSize':'contain',
 	  			'backgroundPosition' : 'center',
 	  			'backgroundRepeat' : 'no-repeat',
-	  			'width':'50%',
+	  			'width':'100%',
 	  			'height':'50px',
 	  			'padding': '10 0 20 0',
 	  			'cursor':'pointer',
+	  			'marginTop':'50px',
 	  			'fontFamily' : 'Comic Sans ms'
 	  		}
   		}
@@ -36,4 +37,4 @@ constructor(){
    	</button>
  }
 }
-export default WoodenButton;
+export default SmallWoodenButton;

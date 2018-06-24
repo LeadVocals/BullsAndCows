@@ -130,7 +130,8 @@ constructor() {
 	   generateNumber(ev){
 		    axios.post('/generate_number',
 		      querystring.stringify({
-		        user_id: window.localStorage.getItem('user_id'),
+		        username: window.localStorage.getItem('username'),
+		        tour_id: window.localStorage.getItem('tour_id'),
 		        diggits: window.localStorage.getItem('diggits')
 		      }), {
 		        headers: {

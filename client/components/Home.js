@@ -38,6 +38,13 @@ constructor(){
 	      if (e.target.id == "highscore_button"){
 	      	this.changePage('highscore');
 	      }
+	      if (e.target.id == "play_tournaments_button"){
+	      	this.changePage('play_tournaments');
+	      }
+	      if (e.target.id == "logout_button") {
+	        localStorage.clear();
+	        window.location.reload();
+	      }
 	    }
     changePage(page){
     	$("#home_div").css('display','none');
@@ -47,18 +54,25 @@ constructor(){
  render(){
  	let loginButton = <UserLogin />;
  	let registerButton = <RegisterUser />;
+ 	let settingsButton = '';
+ 	let tournamentsButton = '';
  	
- 	if(typeof(window.localStorage.getItem('user_id'))!='undefined' && window.localStorage.getItem('user_id')!=null && window.localStorage.getItem('user_id')!=0){
+ 	if(typeof(window.localStorage.getItem('username'))!='undefined' && window.localStorage.getItem('username')!=null && window.localStorage.getItem('username')!=0){
  		loginButton = <WoodenButton value="LOGOUT" id="logout_button" onClick={this.onClick}></WoodenButton>;
  		registerButton = '';
+ 		tournamentsButton = <WoodenButton id="play_tournaments_button" style="width:25% !important" onClick={this.onClick} value="TOURNAMENTS"></WoodenButton>;
+ 	}
+ 	if(typeof(window.localStorage.getItem('user_role'))!='undefined' && window.localStorage.getItem('user_role')!=null && window.localStorage.getItem('user_role')=='administrator'){
+ 		settingsButton = <WoodenButton id="settings_button" style="width:25% !important" onClick={this.onClick} value="SETTINGS"></WoodenButton>;
  	}
  	if(typeof(window.localStorage.getItem('gt'))!='undefined' && window.localStorage.getItem('gt')!=null && window.localStorage.getItem('gt')!=0){
  		$("#game_div").css('display','block');
  		return (<Game />)
  	}else{
  		return (<Thumbnail id="home_div" style={this.state.style}>
-   		{loginButton}{registerButton}<br />
-   		<WoodenButton id="settings_button" style="width:25% !important" onClick={this.onClick} value="SETTINGS"></WoodenButton><br />
+   		<br />{loginButton}<br />{registerButton}<br />
+   		{settingsButton}<br />
+   		{tournamentsButton}<br />
    		<WoodenButton id="new_game_button" style="width:25% !important" onClick={this.onClick} value="NEW GAME"></WoodenButton><br />
    		<WoodenButton id="highscore_button" style="width:25% !important" onClick={this.onClick} value="HIGHSCORE"></WoodenButton>
    	</Thumbnail>)

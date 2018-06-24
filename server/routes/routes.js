@@ -6,6 +6,7 @@ var Expense = require('../../models/Expense');
 var User = require('../../models/User');
 var GameType = require('../../models/GameType');
 var Game = require('../../models/Game');
+var Tournament = require('../../models/Tournament');
 
 router.get('/', function(req, res){
   res.render('index')
@@ -41,7 +42,7 @@ router.route('/register_user')
    
   });
 })
-//UPDATE GAME TYPE
+//UPDATE USER
 router.route('/update_user')
 .post(function(req, res) {
  const doc = {
@@ -57,7 +58,7 @@ router.route('/update_user')
       res.send('User successfully updated!');
   });
 });
-//DELETE GAME TYPE
+//DELETE USER
 router.get('/delete_user', function(req, res){
  var id = req.query.id;
  User.find({_id: id}).remove().exec(function(err, user) {
@@ -97,10 +98,15 @@ router.route('/generate_number')
 	    return o;
 	}
 	var game = new Game();
-	if(typeof(req.body.user_id)!='undefined' && req.body.user_id!=null && req.body.user_id!=0){		
-		  game.user_id = req.body.user_id;
+	if(typeof(req.body.username)!='undefined' && req.body.username!=null && req.body.username!=0){		
+		  game.username = req.body.username;
 	}else{
-		game.user_id = '';
+		game.username = '';
+	}
+	if(typeof(req.body.tour_id)!='undefined' && req.body.tour_id!=null && req.body.tour_id!=0){		
+		  game.tour_id = req.body.tour_id;
+	}else{
+		game.tour_id = '';
 	}
 		  game.gen_number = randomDigit(req.body.diggits);
 		  game.total_time = 0;
@@ -231,64 +237,96 @@ router.get('/delete_game_type', function(req, res){
  })
 });
 
-router.route('/insert')
-.post(function(req,res) {
- var expense = new Expense();
-  expense.description = req.body.desc;
-  expense.amount = req.body.amount;
-  expense.month = req.body.month;
-  expense.year = req.body.year;
-expense.save(function(err) {
-      if (err)
-        res.send(err);
-      res.send('Expense successfully added!');
+router.route('/getGameTypeByName')
+.post(function(req,res) { 
+  GameType.find({$and: [{name: req.body.name}]}, function(err, game_types) {
+   if (err)
+    res.send(err);
+   if(!game_types.length){
+   	res.send('GAME TYPE NOT EXISTS!');
+   }else{   	
+   	res.json(game_types);
+   }
+   
   });
 })
-router.route('/update')
-.post(function(req, res) {
- const doc = {
-     description: req.body.description,
-     amount: req.body.amount,
-     month: req.body.month,
-     year: req.body.year
- };
- console.log(doc);
-  Expense.update({_id: req.body._id}, doc, function(err, result) {
+
+// TOURNAMENTS
+router.get('/getAllTournaments',function(req, res) {
+  Tournament.find({}, function(err, tournaments) {
+   if (err)
+    res.send(err);
+   res.json(tournaments);
+  });
+});
+router.get('/getAllActiveTournaments',function(req, res) {
+	var today = new Date();
+  Tournament.find({$and: [{start_date: {$lte : today }},{end_date: {$gte : today }}]}, function(err, tournaments) {
+   if (err)
+    res.send(err);
+   res.json(tournaments);
+  });
+});
+//NEW TOURNAMENT
+router.route('/insert_tournament')
+.post(function(req,res) {
+	Tournament.find({$and: [{game_type: req.body.game_type}]}, function(err, tournaments) {
+   if (err)
+    res.send(err);
+   if(!tournaments.length){
+   	var tournament = new Tournament();
+  tournament.name = req.body.name;
+  tournament.game_type = req.body.game_type;
+  tournament.start_date = req.body.start_date;
+  tournament.end_date = req.body.end_date;
+	tournament.save(function(err) {
       if (err)
         res.send(err);
-      res.send('Expense successfully updated!');
+      res.send('Tournament added successfuly!');
+  });
+   }else{   	
+   	res.send('TOURNAMENT WITH THIS GAME TYPE ALREADY EXISTS AND IS ACTIVE!');
+   }
+   
+  });
+})
+//UPDATE TOURNAMENT
+router.route('/update_tournament')
+.post(function(req, res) {
+ const doc = {
+     name: req.body.name,
+     game_type: req.body.game_type,
+     start_date: req.body.start_date,
+     end_date: req.body.end_date
+ };
+ console.log(doc);
+  Tournament.update({_id: req.body._id}, doc, function(err, result) {
+      if (err)
+        res.send(err);
+      res.send('Tournament successfully updated!');
   });
 });
-router.get('/delete', function(req, res){
+//DELETE TOURNAMENT
+router.get('/delete_tournament', function(req, res){
  var id = req.query.id;
- Expense.find({_id: id}).remove().exec(function(err, expense) {
+ Tournament.find({_id: id}).remove().exec(function(err, tournament) {
   if(err)
    res.send(err)
-  res.send('Expense successfully deleted!');
+  res.send('Tournament successfully deleted!');
  })
 });
-router.get('/getAll',function(req, res) {
- var monthRec = req.query.month;
- var yearRec = req.query.year;
- if(monthRec && monthRec != 'All'){
-  Expense.find({$and: [ {month: monthRec}, {year: yearRec}]}, function(err, expenses) {
-   if (err)
-    res.send(err);
-   res.json(expenses);
-  });
- } else {
-  Expense.find({year: yearRec}, function(err, expenses) {
-   if (err)
-    res.send(err);
-   res.json(expenses);
-  });
- }
-});
-
-
 //HIGHSCORE
 router.get('/getHighscore',function(req, res) {
 	Game.find({$and: [{success: '1'}]}).sort({tries: 1,total_time: 1}).limit(10).exec(function(err, data){
+	      if (err)
+	    res.send(err);
+	   res.json(data);
+	  });
+});
+//TOURNAMENT SCORES
+router.get('/getTournamentScores',function(req, res) {
+	var id = req.query.tour_id;
+	Game.find({$and: [{success: '1'},{tour_id: id}]}).sort({tries: 1,total_time: 1}).limit(10).exec(function(err, data){
 	      if (err)
 	    res.send(err);
 	   res.json(data);
