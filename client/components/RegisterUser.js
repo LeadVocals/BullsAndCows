@@ -103,7 +103,6 @@ render() {
        <label for="password">Password:</label><input type="password" id="password" name="password" value={this.state.password} onChange={this.handleTextChange}></input>
        <label for="role">Role:</label><select id="role" name="role" value={this.state.role} onChange={this.handleSelectChange}>
             <option value="client" id="client">Client</option>
-            <option value="administrator" id="administrator">Administrator</option>
          </select>
       </fieldset>
 <div className='button-center'>
